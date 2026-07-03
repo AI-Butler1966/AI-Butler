@@ -79,3 +79,7 @@ print("-" * 40)
 print("こんにちは、Toshioさん！")
 print("AI Butlerは日経平均も見られるようになりました。")
 print("=" * 40)
+
+
+
+
