@@ -3,9 +3,18 @@ import requests
 from datetime import datetime
 
 # ========================
+# Basic Settings
+# ========================
+APP_NAME = "AI Butler"
+VERSION = "v0.0.6"
+USER_NAME = "Toshio"
+
+# ========================
 # Time
 # ========================
 now = datetime.now()
+date_text = now.strftime("%Y-%m-%d")
+time_text = now.strftime("%H:%M:%S")
 
 # ========================
 # Weather - Fukuoka
@@ -31,21 +40,16 @@ wind_speed = current_weather["wind_speed_10m"]
 # ========================
 # Market
 # ========================
-
-# USD/JPY
 usd_jpy_ticker = yf.Ticker("JPY=X")
 usd_jpy_data = usd_jpy_ticker.history(period="1d")
 usd_jpy = usd_jpy_data["Close"].iloc[-1]
 
-# BTC/USD
 btc_ticker = yf.Ticker("BTC-USD")
 btc_data = btc_ticker.history(period="1d")
 btc_usd = btc_data["Close"].iloc[-1]
 
-# BTC/JPY
 btc_jpy = btc_usd * usd_jpy
 
-# Nikkei 225
 nikkei_ticker = yf.Ticker("^N225")
 nikkei_data = nikkei_ticker.history(period="1d")
 nikkei = nikkei_data["Close"].iloc[-1]
@@ -53,33 +57,37 @@ nikkei = nikkei_data["Close"].iloc[-1]
 # ========================
 # Display
 # ========================
-print("=" * 40)
-print("🤖 AI Butler v0.0.5")
-print("=" * 40)
+line = "=" * 50
+sub_line = "-" * 50
 
-print("現在時刻:", now.strftime("%Y-%m-%d %H:%M:%S"))
+print(line)
+print(f"🤖 {APP_NAME} {VERSION}")
+print(line)
 
-print("-" * 40)
-print("🌤 Weather")
-print("-" * 40)
-print("Location : Fukuoka")
-print(f"Temp     : {temperature} C")
-print(f"Humidity : {humidity} %")
-print(f"Wind     : {wind_speed} km/h")
+print()
+print(f"📅 Date : {date_text}")
+print(f"🕒 Time : {time_text}")
 
-print("-" * 40)
+print()
+print("🌤 Weather - Fukuoka")
+print(sub_line)
+print(f"Temp      : {temperature} C")
+print(f"Humidity  : {humidity} %")
+print(f"Wind      : {wind_speed} km/h")
+
+print()
 print("💹 Market")
-print("-" * 40)
+print(sub_line)
 print(f"USD/JPY    : {usd_jpy:.3f}")
 print(f"BTC/USD    : {btc_usd:,.2f}")
 print(f"BTC/JPY    : {btc_jpy:,.0f}")
 print(f"Nikkei225  : {nikkei:,.2f}")
 
-print("-" * 40)
-print("こんにちは、Toshioさん！")
-print("AI Butlerは日経平均も見られるようになりました。")
-print("=" * 40)
+print()
+print("💬 Message")
+print(sub_line)
+print(f"こんにちは、{USER_NAME}さん！")
+print("AI Butlerは表示が少し見やすくなりました。")
 
-
-
-
+print()
+print(line)
