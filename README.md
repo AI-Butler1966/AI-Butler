@@ -1,28 +1,78 @@
 # AI Butler
 
-Version 0.0.1
+AI Butler is a personal assistant project running on Ubuntu.
 
-## Purpose
+It collects weather and market data, then displays a simple dashboard in the terminal.
 
-AI Forex Monitoring System
+## Version
+
+v0.1.2
 
 ## Features
 
-- USD/JPY Monitoring
-- Technical Analysis
-- AI Commentary
-- Discord Notification
+- Current date and time
+- Fukuoka weather
+  - Temperature
+  - Humidity
+  - Wind speed
+- Market data
+  - USD/JPY
+  - BTC/USD
+  - BTC/JPY
+  - Nikkei 225
+  - S&P 500
+  - NASDAQ Composite
+  - NY Dow
+  - Gold Futures
+- Error handling
+  - Weather API error handling
+  - Market data error handling
+  - N/A display when data is unavailable
+- Refactored code with functions
 
 ## Environment
 
-Ubuntu 24.04 LTS
-Docer
-Python
-Git
- 
-## Status
+- Lenovo G580
+- Ubuntu
+- Python
+- Git
+- GitHub
+- Virtual environment
 
-Development Started
+## Python Libraries
 
-Created:   2026-07-01
+- requests
+- yfinance
 
+## How to Run
+
+Activate the virtual environment:
+
+source venv/bin/activate
+
+Run AI Butler:
+
+python3 main.py
+
+## Project Status
+
+Development in progress.
+
+Current milestone:
+
+AI Butler v0.1.2  
+README updated
+
+## Future Plans
+
+- Add more market data
+- Add AI commentary
+- Add Discord notification
+- Add daily summary
+- Add configuration file
+- Add logging
+- Add Docker support
+
+## Author
+
+Toshio Matuura
