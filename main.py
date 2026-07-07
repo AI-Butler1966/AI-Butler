@@ -6,7 +6,7 @@ from datetime import datetime
 # Basic Settings
 # ========================
 APP_NAME = "AI Butler"
-VERSION = "v0.0.8"
+VERSION = "v0.0.9"
 USER_NAME = "Toshio"
 
 # ========================
@@ -68,6 +68,12 @@ nasdaq = nasdaq_data["Close"].iloc[-1]
 dow_ticker = yf.Ticker("^DJI")
 dow_data = dow_ticker.history(period="1d")
 dow = dow_data["Close"].iloc[-1]
+
+# Gold Futures
+gold_ticker = yf.Ticker("GC=F")
+gold_data = gold_ticker.history(period="1d")
+gold = gold_data["Close"].iloc[-1]
+
 # ========================
 # Display
 # ========================
@@ -99,11 +105,12 @@ print(f"Nikkei225  : {nikkei:,.2f}")
 print(f"S&P500     : {sp500:,.2f}")
 print(f"NASDAQ    : {nasdaq:,.2f}")
 print(f"NY Dow    : {dow:,.2f}")
+print(f"Gold      : {gold:,.2f} USD/oz")
 
 print()
 print("💬 Message")
 print(sub_line)
 print(f"こんにちは、{USER_NAME}さん！")
-print("AI Butlerは米国主要指数も見られるようになりました。")
+print("AI Butlerはゴールド価格も見られるようになりました。")
 print()
 print(line)
