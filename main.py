@@ -6,7 +6,7 @@ from datetime import datetime
 # Basic Settings
 # ========================
 APP_NAME = "AI Butler"
-VERSION = "v0.0.6"
+VERSION = "v0.0.7"
 USER_NAME = "Toshio"
 
 # ========================
@@ -54,6 +54,11 @@ nikkei_ticker = yf.Ticker("^N225")
 nikkei_data = nikkei_ticker.history(period="1d")
 nikkei = nikkei_data["Close"].iloc[-1]
 
+# S&P 500
+sp500_ticker = yf.Ticker("^GSPC")
+sp500_data = sp500_ticker.history(period="1d")
+sp500 = sp500_data["Close"].iloc[-1]
+
 # ========================
 # Display
 # ========================
@@ -82,12 +87,12 @@ print(f"USD/JPY    : {usd_jpy:.3f}")
 print(f"BTC/USD    : {btc_usd:,.2f}")
 print(f"BTC/JPY    : {btc_jpy:,.0f}")
 print(f"Nikkei225  : {nikkei:,.2f}")
+print(f"S&P500     : {sp500:,.2f}")
 
 print()
 print("💬 Message")
 print(sub_line)
 print(f"こんにちは、{USER_NAME}さん！")
-print("AI Butlerは表示が少し見やすくなりました。")
-
+print("AI ButlerはS&P500も見られるようになりました。")
 print()
 print(line)
