@@ -1,116 +1,132 @@
-import yfinance as yf
 import requests
+import yfinance as yf
 from datetime import datetime
 
-# ========================
-# Basic Settings
-# ========================
+
 APP_NAME = "AI Butler"
-VERSION = "v0.0.9"
+VERSION = "v0.1.0"
 USER_NAME = "Toshio"
 
-# ========================
-# Time
-# ========================
-now = datetime.now()
-date_text = now.strftime("%Y-%m-%d")
-time_text = now.strftime("%H:%M:%S")
+LOCATION_NAME = "Fukuoka"
+LATITUDE = 33.5902
+LONGITUDE = 130.4017
 
-# ========================
-# Weather - Fukuoka
-# ========================
-latitude = 33.5902
-longitude = 130.4017
 
-weather_url = (
-    "https://api.open-meteo.com/v1/forecast"
-    f"?latitude={latitude}"
-    f"&longitude={longitude}"
-    "&current=temperature_2m,relative_humidity_2m,wind_speed_10m"
-)
+def get_current_time():
+    now = datetime.now()
+    date_text = now.strftime("%Y-%m-%d")
+    time_text = now.strftime("%H:%M:%S")
+    return date_text, time_text
 
-weather_response = requests.get(weather_url)
-weather_data = weather_response.json()
-current_weather = weather_data["current"]
 
-temperature = current_weather["temperature_2m"]
-humidity = current_weather["relative_humidity_2m"]
-wind_speed = current_weather["wind_speed_10m"]
+def get_weather():
+    url = (
+        "https://api.open-meteo.com/v1/forecast"
+        f"?latitude={LATITUDE}"
+        f"&longitude={LONGITUDE}"
+        "&current=temperature_2m,relative_humidity_2m,wind_speed_10m"
+    )
 
-# ========================
-# Market
-# ========================
-usd_jpy_ticker = yf.Ticker("JPY=X")
-usd_jpy_data = usd_jpy_ticker.history(period="1d")
-usd_jpy = usd_jpy_data["Close"].iloc[-1]
+    response = requests.get(url)
+    data = response.json()
 
-btc_ticker = yf.Ticker("BTC-USD")
-btc_data = btc_ticker.history(period="1d")
-btc_usd = btc_data["Close"].iloc[-1]
+    current = data["current"]
 
-btc_jpy = btc_usd * usd_jpy
+    weather = {
+        "temperature": current["temperature_2m"],
+        "humidity": current["relative_humidity_2m"],
+        "wind": current["wind_speed_10m"],
+    }
 
-nikkei_ticker = yf.Ticker("^N225")
-nikkei_data = nikkei_ticker.history(period="1d")
-nikkei = nikkei_data["Close"].iloc[-1]
+    return weather
 
-# S&P 500
-sp500_ticker = yf.Ticker("^GSPC")
-sp500_data = sp500_ticker.history(period="1d")
-sp500 = sp500_data["Close"].iloc[-1]
 
-# NASDAQ Composite
-nasdaq_ticker = yf.Ticker("^IXIC")
-nasdaq_data = nasdaq_ticker.history(period="1d")
-nasdaq = nasdaq_data["Close"].iloc[-1]
+def get_price(ticker_symbol):
+    ticker = yf.Ticker(ticker_symbol)
+    data = ticker.history(period="1d")
+    price = data["Close"].iloc[-1]
+    return price
 
-# NY Dow
-dow_ticker = yf.Ticker("^DJI")
-dow_data = dow_ticker.history(period="1d")
-dow = dow_data["Close"].iloc[-1]
 
-# Gold Futures
-gold_ticker = yf.Ticker("GC=F")
-gold_data = gold_ticker.history(period="1d")
-gold = gold_data["Close"].iloc[-1]
+def get_market_data():
+    usd_jpy = get_price("JPY=X")
+    btc_usd = get_price("BTC-USD")
+    btc_jpy = btc_usd * usd_jpy
 
-# ========================
-# Display
-# ========================
-line = "=" * 50
-sub_line = "-" * 50
+    market = {
+        "usd_jpy": usd_jpy,
+        "btc_usd": btc_usd,
+        "btc_jpy": btc_jpy,
+        "nikkei": get_price("^N225"),
+        "sp500": get_price("^GSPC"),
+        "nasdaq": get_price("^IXIC"),
+        "dow": get_price("^DJI"),
+        "gold": get_price("GC=F"),
+    }
 
-print(line)
-print(f"🤖 {APP_NAME} {VERSION}")
-print(line)
+    return market
 
-print()
-print(f"📅 Date : {date_text}")
-print(f"🕒 Time : {time_text}")
 
-print()
-print("🌤 Weather - Fukuoka")
-print(sub_line)
-print(f"Temp      : {temperature} C")
-print(f"Humidity  : {humidity} %")
-print(f"Wind      : {wind_speed} km/h")
+def print_header(date_text, time_text):
+    line = "=" * 50
 
-print()
-print("💹 Market")
-print(sub_line)
-print(f"USD/JPY    : {usd_jpy:.3f}")
-print(f"BTC/USD    : {btc_usd:,.2f}")
-print(f"BTC/JPY    : {btc_jpy:,.0f}")
-print(f"Nikkei225  : {nikkei:,.2f}")
-print(f"S&P500     : {sp500:,.2f}")
-print(f"NASDAQ    : {nasdaq:,.2f}")
-print(f"NY Dow    : {dow:,.2f}")
-print(f"Gold      : {gold:,.2f} USD/oz")
+    print(line)
+    print(f"🤖 {APP_NAME} {VERSION}")
+    print(line)
+    print()
+    print(f"📅 Date : {date_text}")
+    print(f"🕒 Time : {time_text}")
+    print()
 
-print()
-print("💬 Message")
-print(sub_line)
-print(f"こんにちは、{USER_NAME}さん！")
-print("AI Butlerはゴールド価格も見られるようになりました。")
-print()
-print(line)
+
+def print_weather(weather):
+    sub_line = "-" * 50
+
+    print(f"🌤 Weather - {LOCATION_NAME}")
+    print(sub_line)
+    print(f"Temp      : {weather['temperature']} C")
+    print(f"Humidity  : {weather['humidity']} %")
+    print(f"Wind      : {weather['wind']} km/h")
+    print()
+
+
+def print_market(market):
+    sub_line = "-" * 50
+
+    print("💹 Market")
+    print(sub_line)
+    print(f"USD/JPY    : {market['usd_jpy']:,.3f}")
+    print(f"BTC/USD    : {market['btc_usd']:,.2f}")
+    print(f"BTC/JPY    : {market['btc_jpy']:,.0f}")
+    print(f"Nikkei225  : {market['nikkei']:,.2f}")
+    print(f"S&P500     : {market['sp500']:,.2f}")
+    print(f"NASDAQ     : {market['nasdaq']:,.2f}")
+    print(f"NY Dow     : {market['dow']:,.2f}")
+    print(f"Gold       : {market['gold']:,.2f} USD/oz")
+    print()
+
+
+def print_message():
+    sub_line = "-" * 50
+
+    print("💬 Message")
+    print(sub_line)
+    print(f"こんにちは、{USER_NAME}さん！")
+    print("AI Butlerはコードが関数化され、少しSEっぽくなりました。")
+    print()
+
+
+def main():
+    date_text, time_text = get_current_time()
+    weather = get_weather()
+    market = get_market_data()
+
+    print_header(date_text, time_text)
+    print_weather(weather)
+    print_market(market)
+    print_message()
+    print("=" * 50)
+
+
+if __name__ == "__main__":
+    main()
