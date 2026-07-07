@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.1.0"
+VERSION = "v0.1.1"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -19,6 +19,14 @@ def get_current_time():
     return date_text, time_text
 
 
+def get_empty_weather():
+    return {
+        "temperature": None,
+        "humidity": None,
+        "wind": None,
+    }
+
+
 def get_weather():
     url = (
         "https://api.open-meteo.com/v1/forecast"
@@ -27,31 +35,55 @@ def get_weather():
         "&current=temperature_2m,relative_humidity_2m,wind_speed_10m"
     )
 
-    response = requests.get(url)
-    data = response.json()
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
 
-    current = data["current"]
+        data = response.json()
+        current = data["current"]
 
-    weather = {
-        "temperature": current["temperature_2m"],
-        "humidity": current["relative_humidity_2m"],
-        "wind": current["wind_speed_10m"],
-    }
+        weather = {
+            "temperature": current["temperature_2m"],
+            "humidity": current["relative_humidity_2m"],
+            "wind": current["wind_speed_10m"],
+        }
 
-    return weather
+        return weather
+
+    except Exception as e:
+        print(f"⚠ Weather Error: {e}")
+        return get_empty_weather()
 
 
 def get_price(ticker_symbol):
-    ticker = yf.Ticker(ticker_symbol)
-    data = ticker.history(period="1d")
-    price = data["Close"].iloc[-1]
-    return price
+    try:
+        ticker = yf.Ticker(ticker_symbol)
+        data = ticker.history(period="1d")
+
+        if data.empty:
+            print(f"⚠ Market Error: No data for {ticker_symbol}")
+            return None
+
+        if "Close" not in data.columns:
+            print(f"⚠ Market Error: Close price not found for {ticker_symbol}")
+            return None
+
+        price = data["Close"].iloc[-1]
+        return price
+
+    except Exception as e:
+        print(f"⚠ Market Error: {ticker_symbol} - {e}")
+        return None
 
 
 def get_market_data():
     usd_jpy = get_price("JPY=X")
     btc_usd = get_price("BTC-USD")
-    btc_jpy = btc_usd * usd_jpy
+
+    if usd_jpy is not None and btc_usd is not None:
+        btc_jpy = btc_usd * usd_jpy
+    else:
+        btc_jpy = None
 
     market = {
         "usd_jpy": usd_jpy,
@@ -65,6 +97,13 @@ def get_market_data():
     }
 
     return market
+
+
+def format_value(value, digits=2):
+    if value is None:
+        return "N/A"
+
+    return f"{value:,.{digits}f}"
 
 
 def print_header(date_text, time_text):
@@ -84,9 +123,9 @@ def print_weather(weather):
 
     print(f"🌤 Weather - {LOCATION_NAME}")
     print(sub_line)
-    print(f"Temp      : {weather['temperature']} C")
-    print(f"Humidity  : {weather['humidity']} %")
-    print(f"Wind      : {weather['wind']} km/h")
+    print(f"Temp      : {format_value(weather['temperature'], 1)} C")
+    print(f"Humidity  : {format_value(weather['humidity'], 0)} %")
+    print(f"Wind      : {format_value(weather['wind'], 1)} km/h")
     print()
 
 
@@ -95,14 +134,14 @@ def print_market(market):
 
     print("💹 Market")
     print(sub_line)
-    print(f"USD/JPY    : {market['usd_jpy']:,.3f}")
-    print(f"BTC/USD    : {market['btc_usd']:,.2f}")
-    print(f"BTC/JPY    : {market['btc_jpy']:,.0f}")
-    print(f"Nikkei225  : {market['nikkei']:,.2f}")
-    print(f"S&P500     : {market['sp500']:,.2f}")
-    print(f"NASDAQ     : {market['nasdaq']:,.2f}")
-    print(f"NY Dow     : {market['dow']:,.2f}")
-    print(f"Gold       : {market['gold']:,.2f} USD/oz")
+    print(f"USD/JPY    : {format_value(market['usd_jpy'], 3)}")
+    print(f"BTC/USD    : {format_value(market['btc_usd'], 2)}")
+    print(f"BTC/JPY    : {format_value(market['btc_jpy'], 0)}")
+    print(f"Nikkei225  : {format_value(market['nikkei'], 2)}")
+    print(f"S&P500     : {format_value(market['sp500'], 2)}")
+    print(f"NASDAQ     : {format_value(market['nasdaq'], 2)}")
+    print(f"NY Dow     : {format_value(market['dow'], 2)}")
+    print(f"Gold       : {format_value(market['gold'], 2)} USD/oz")
     print()
 
 
@@ -112,7 +151,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerはコードが関数化され、少しSEっぽくなりました。")
+    print("AI Butlerはエラーに少し強くなりました。")
     print()
 
 
