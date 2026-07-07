@@ -6,7 +6,7 @@ from datetime import datetime
 # Basic Settings
 # ========================
 APP_NAME = "AI Butler"
-VERSION = "v0.0.7"
+VERSION = "v0.0.8"
 USER_NAME = "Toshio"
 
 # ========================
@@ -59,6 +59,15 @@ sp500_ticker = yf.Ticker("^GSPC")
 sp500_data = sp500_ticker.history(period="1d")
 sp500 = sp500_data["Close"].iloc[-1]
 
+# NASDAQ Composite
+nasdaq_ticker = yf.Ticker("^IXIC")
+nasdaq_data = nasdaq_ticker.history(period="1d")
+nasdaq = nasdaq_data["Close"].iloc[-1]
+
+# NY Dow
+dow_ticker = yf.Ticker("^DJI")
+dow_data = dow_ticker.history(period="1d")
+dow = dow_data["Close"].iloc[-1]
 # ========================
 # Display
 # ========================
@@ -88,11 +97,13 @@ print(f"BTC/USD    : {btc_usd:,.2f}")
 print(f"BTC/JPY    : {btc_jpy:,.0f}")
 print(f"Nikkei225  : {nikkei:,.2f}")
 print(f"S&P500     : {sp500:,.2f}")
+print(f"NASDAQ    : {nasdaq:,.2f}")
+print(f"NY Dow    : {dow:,.2f}")
 
 print()
 print("💬 Message")
 print(sub_line)
 print(f"こんにちは、{USER_NAME}さん！")
-print("AI ButlerはS&P500も見られるようになりました。")
+print("AI Butlerは米国主要指数も見られるようになりました。")
 print()
 print(line)
