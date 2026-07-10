@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.1.4"
+VERSION = "v0.1.5"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -139,18 +139,30 @@ def print_market(market):
 
     print("💹 Market")
     print(sub_line)
+
+    print("💱 Forex")
     print(f"USD/JPY    : {format_value(market['usd_jpy'], 3)}")
     print(f"EUR/USD    : {format_value(market['eur_usd'], 4)}")
     print(f"EUR/JPY    : {format_value(market['eur_jpy'], 3)}")
+    print()
+
+    print("₿ Crypto")
     print(f"BTC/USD    : {format_value(market['btc_usd'], 2)}")
     print(f"BTC/JPY    : {format_value(market['btc_jpy'], 0)}")
+    print()
+
+    print("📈 Stock Index")
     print(f"Nikkei225  : {format_value(market['nikkei'], 2)}")
     print(f"S&P500     : {format_value(market['sp500'], 2)}")
     print(f"NASDAQ     : {format_value(market['nasdaq'], 2)}")
     print(f"NY Dow     : {format_value(market['dow'], 2)}")
+    print()
+
+    print("🥇 Commodities")
     print(f"Gold       : {format_value(market['gold'], 2)} USD/oz")
     print(f"Crude Oil  : {format_value(market['oil'], 2)} USD/bbl")
     print()
+
 
 
 def print_message():
@@ -159,7 +171,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerはユーロ為替も見られるようになりました。")
+    print("AI Butlerはマーケット表示がカテゴリ別になりました。")
     print()
 
 

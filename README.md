@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.1.4
+v0.1.5
 
 ## Features
 
@@ -63,8 +63,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.1.4
-EUR/USD and EUR/JPY added
+AI Butler v0.1.5
+Market display categorized
 
 ## Future Plans
 
