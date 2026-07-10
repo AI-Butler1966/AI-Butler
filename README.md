@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.1.3
+v0.1.4
 
 ## Features
 
@@ -17,6 +17,8 @@ v0.1.3
   - Wind speed
 - Market data
   - USD/JPY
+  - EUR/USD
+  - EUR/JPY
   - BTC/USD
   - BTC/JPY
   - Nikkei 225
@@ -61,8 +63,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.1.3
-Crude Oil price added
+AI Butler v0.1.4
+EUR/USD and EUR/JPY added
 
 ## Future Plans
 

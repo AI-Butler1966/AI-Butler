@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.1.3"
+VERSION = "v0.1.4"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -79,6 +79,8 @@ def get_price(ticker_symbol):
 def get_market_data():
     usd_jpy = get_price("JPY=X")
     btc_usd = get_price("BTC-USD")
+    eur_usd = get_price("EURUSD=X")
+    eur_jpy = get_price("EURJPY=X")
 
     if usd_jpy is not None and btc_usd is not None:
         btc_jpy = btc_usd * usd_jpy
@@ -87,6 +89,8 @@ def get_market_data():
 
     market = {
         "usd_jpy": usd_jpy,
+        "eur_usd": eur_usd,
+        "eur_jpy": eur_jpy,
         "btc_usd": btc_usd,
         "btc_jpy": btc_jpy,
         "nikkei": get_price("^N225"),
@@ -136,6 +140,8 @@ def print_market(market):
     print("💹 Market")
     print(sub_line)
     print(f"USD/JPY    : {format_value(market['usd_jpy'], 3)}")
+    print(f"EUR/USD    : {format_value(market['eur_usd'], 4)}")
+    print(f"EUR/JPY    : {format_value(market['eur_jpy'], 3)}")
     print(f"BTC/USD    : {format_value(market['btc_usd'], 2)}")
     print(f"BTC/JPY    : {format_value(market['btc_jpy'], 0)}")
     print(f"Nikkei225  : {format_value(market['nikkei'], 2)}")
@@ -153,7 +159,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerは原油価格も見られるようになりました。")
+    print("AI Butlerはユーロ為替も見られるようになりました。")
     print()
 
 
