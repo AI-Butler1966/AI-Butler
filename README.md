@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.1.2
+v0.1.3
 
 ## Features
 
@@ -24,6 +24,7 @@ v0.1.2
   - NASDAQ Composite
   - NY Dow
   - Gold Futures
+  - Crude Oil Futures
 - Error handling
   - Weather API error handling
   - Market data error handling
@@ -60,8 +61,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.1.2  
-README updated
+AI Butler v0.1.3
+Crude Oil price added
 
 ## Future Plans
 

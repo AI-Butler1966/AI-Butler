@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.1.2"
+VERSION = "v0.1.3"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -94,6 +94,7 @@ def get_market_data():
         "nasdaq": get_price("^IXIC"),
         "dow": get_price("^DJI"),
         "gold": get_price("GC=F"),
+        "oil": get_price("CL=F"),
     }
 
     return market
@@ -142,6 +143,7 @@ def print_market(market):
     print(f"NASDAQ     : {format_value(market['nasdaq'], 2)}")
     print(f"NY Dow     : {format_value(market['dow'], 2)}")
     print(f"Gold       : {format_value(market['gold'], 2)} USD/oz")
+    print(f"Crude Oil  : {format_value(market['oil'], 2)} USD/bbl")
     print()
 
 
@@ -151,7 +153,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerはエラーに少し強くなりました。")
+    print("AI Butlerは原油価格も見られるようになりました。")
     print()
 
 
