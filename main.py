@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.1.5"
+VERSION = "v0.1.6"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -171,7 +171,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerはマーケット表示がカテゴリ別になりました。")
+    print("AI ButlerのREADMEに実行例が追加されました。")
     print()
 
 

@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.1.5
+v0.1.6
 
 ## Features
 
@@ -57,14 +57,59 @@ Run AI Butler:
 
 python3 main.py
 
+## Sample Output
+
+Example terminal output:
+
+    ==================================================
+    🤖 AI Butler v0.1.6
+    ==================================================
+
+    📅 Date : 2026-07-10
+    🕒 Time : 16:40:34
+
+    🌤 Weather - Fukuoka
+    --------------------------------------------------
+    Temp      : 29.6 C
+    Humidity  : 69 %
+    Wind      : 7.4 km/h
+
+    💹 Market
+    --------------------------------------------------
+    💱 Forex
+    USD/JPY    : 161.723
+    EUR/USD    : 1.1442
+    EUR/JPY    : 184.977
+
+    ₿ Crypto
+    BTC/USD    : 63,883.17
+    BTC/JPY    : 10,331,379
+
+    📈 Stock Index
+    Nikkei225  : 68,557.73
+    S&P500     : 7,543.64
+    NASDAQ     : 26,206.89
+    NY Dow     : 52,487.41
+
+    🥇 Commodities
+    Gold       : 4,122.10 USD/oz
+    Crude Oil  : 71.59 USD/bbl
+
+    💬 Message
+    --------------------------------------------------
+    こんにちは、Toshioさん！
+    AI ButlerのREADMEに実行例が追加されました。
+
+    ==================================================
+
 ## Project Status
 
 Development in progress.
 
 Current milestone:
 
-AI Butler v0.1.5
-Market display categorized
+AI Butler v0.1.6
+Sample output added to README
 
 ## Future Plans
 
