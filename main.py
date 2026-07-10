@@ -1,10 +1,11 @@
+import os
 import requests
 import yfinance as yf
 from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.1.6"
+VERSION = "v0.1.7"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -171,8 +172,64 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI ButlerのREADMEに実行例が追加されました。")
+    print("AI Butlerは実行結果をログ保存できるようになりました。")
     print()
+
+
+def save_log(date_text, time_text, weather, market):
+    os.makedirs("logs", exist_ok=True)
+
+    file_time = time_text.replace(":", "-")
+    log_file = f"logs/{date_text}_{file_time}.txt"
+
+    lines = [
+        "=" * 50,
+        f"{APP_NAME} {VERSION}",
+        "=" * 50,
+        "",
+        f"Date : {date_text}",
+        f"Time : {time_text}",
+        "",
+        f"Weather - {LOCATION_NAME}",
+        "-" * 50,
+        f"Temp      : {format_value(weather['temperature'], 1)} C",
+        f"Humidity  : {format_value(weather['humidity'], 0)} %",
+        f"Wind      : {format_value(weather['wind'], 1)} km/h",
+        "",
+        "Market",
+        "-" * 50,
+        "Forex",
+        f"USD/JPY    : {format_value(market['usd_jpy'], 3)}",
+        f"EUR/USD    : {format_value(market['eur_usd'], 4)}",
+        f"EUR/JPY    : {format_value(market['eur_jpy'], 3)}",
+        "",
+        "Crypto",
+        f"BTC/USD    : {format_value(market['btc_usd'], 2)}",
+        f"BTC/JPY    : {format_value(market['btc_jpy'], 0)}",
+        "",
+        "Stock Index",
+        f"Nikkei225  : {format_value(market['nikkei'], 2)}",
+        f"S&P500     : {format_value(market['sp500'], 2)}",
+        f"NASDAQ     : {format_value(market['nasdaq'], 2)}",
+        f"NY Dow     : {format_value(market['dow'], 2)}",
+        "",
+        "Commodities",
+        f"Gold       : {format_value(market['gold'], 2)} USD/oz",
+        f"Crude Oil  : {format_value(market['oil'], 2)} USD/bbl",
+        "",
+        "Message",
+        "-" * 50,
+        f"Hello, {USER_NAME}!",
+        "AI Butler saved this result as a log file.",
+        "",
+        "=" * 50,
+    ]
+
+    with open(log_file, "w", encoding="utf-8") as file:
+        file.write("\n".join(lines))
+
+    return log_file
+
 
 
 def main():
@@ -180,12 +237,14 @@ def main():
     weather = get_weather()
     market = get_market_data()
 
+    log_file = save_log(date_text, time_text, weather, market)
+
     print_header(date_text, time_text)
     print_weather(weather)
     print_market(market)
     print_message()
+    print(f"📝 Log saved: {log_file}")
     print("=" * 50)
-
 
 if __name__ == "__main__":
     main()

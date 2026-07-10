@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.1.6
+v0.1.7
 
 ## Features
 
@@ -32,6 +32,11 @@ v0.1.6
   - Market data error handling
   - N/A display when data is unavailable
 - Refactored code with functions
+- Log output
+  - Save execution result to logs folder
+  - Text file output
+
+
 
 ## Environment
 
@@ -108,8 +113,9 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.1.6
-Sample output added to README
+AI Butler v0.1.7
+Execution log output added
+
 
 ## Future Plans
 
@@ -118,7 +124,6 @@ Sample output added to README
 - Add Discord notification
 - Add daily summary
 - Add configuration file
-- Add logging
 - Add Docker support
 
 ## Author
