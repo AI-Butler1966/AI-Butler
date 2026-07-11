@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.3"
+VERSION = "v0.2.4"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -214,7 +214,10 @@ def read_previous_log_data(log_file):
 
             for label, key in key_map.items():
                 if line.startswith(label):
-                    data[key] = extract_number_from_line(line)
+                    value = extract_number_from_line(line)
+
+                    if value is not None and key not in data:
+                        data[key] = value
 
         return data
 
@@ -228,12 +231,15 @@ def make_comparison_line(label, current_value, previous_value, digits=2, unit=""
 
     diff = current_value - previous_value
 
-    if diff > 0:
-        direction = "↑"
-    elif diff < 0:
-        direction = "↓"
-    else:
+    zero_threshold = 0.5 * (10 ** -digits)
+
+    if abs(diff) < zero_threshold:
+        diff = 0
         direction = "→"
+    elif diff > 0:
+        direction = "↑"
+    else:
+        direction = "↓"
 
     unit_text = f" {unit}" if unit else ""
     return f"{label:<10}: {direction} {format_diff(diff, digits)}{unit_text}"
@@ -468,7 +474,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerは前回ログと今回データを比較できるようになりました。")
+    print("AI Butlerは比較表示を見やすく調整しました。")
     print()
 
 

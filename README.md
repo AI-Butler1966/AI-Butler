@@ -52,6 +52,12 @@ v0.2.3
   - Read previous log data
   - Compare current data with previous data
   - Show difference with arrows
+- Improved comparison display
+  - Treat very small differences as zero
+  - Cleaner arrow display
+  - Avoid -0.000 and +0.00 noise
+
+
 
 ## Environment
 
@@ -128,8 +134,9 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.3
-Comparison with previous log added
+AI Butler v0.2.4
+Improved comparison display
+
 
 ## Future Plans
 
