@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.6"
+VERSION = "v0.2.7"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -543,6 +543,29 @@ def print_comparison(comparison_lines):
 
     print()
 
+def get_high_priority_comments(comments):
+    high_comments = []
+
+    for comment in comments:
+        if comment.startswith("[HIGH]"):
+            high_comments.append(comment)
+
+    return high_comments
+
+
+def print_important_alerts(high_comments):
+    sub_line = "-" * 50
+
+    print("🚨 Important Alerts")
+    print(sub_line)
+
+    if not high_comments:
+        print("No HIGH priority alerts.")
+
+    for comment in high_comments:
+        print(comment)
+
+    print()
 
 def print_ai_comment(comments):
     sub_line = "-" * 50
@@ -562,11 +585,11 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI ButlerはAIコメントに重要度を付けられるようになりました。")
+    print("AI ButlerはHIGHコメントを重要アラートとして抽出できるようになりました。")
     print()
 
 
-def save_log(date_text, time_text, weather, market, comments, previous_log_summary, comparison_lines):
+def save_log(date_text, time_text, weather, market, comments, previous_log_summary, comparison_lines, high_comments):
     os.makedirs("logs", exist_ok=True)
 
     file_time = time_text.replace(":", "-")
@@ -615,6 +638,10 @@ def save_log(date_text, time_text, weather, market, comments, previous_log_summa
         "-" * 50,
         *comparison_lines,
         "",
+        "Important Alerts",
+        "-" * 50,
+        *(high_comments if high_comments else ["No HIGH priority alerts."]),
+        "",
         "AI Comment",
         "-" * 50,
         *[f"- {comment}" for comment in comments],
@@ -648,6 +675,7 @@ def main():
     comparison_comments = generate_comparison_comments(comparison_lines)
     comments.extend(comparison_comments)
     comments = add_importance_to_comments(comments)
+    high_comments = get_high_priority_comments(comments)
 
     log_file = save_log(
         date_text,
@@ -657,6 +685,7 @@ def main():
         comments,
         previous_log_summary,
         comparison_lines,
+        high_comments,
     )
 
     print_header(date_text, time_text)
@@ -664,6 +693,7 @@ def main():
     print_weather(weather)
     print_market(market)
     print_comparison(comparison_lines)
+    print_important_alerts(high_comments)
     print_ai_comment(comments)
     print_message()
     print(f"📝 Log saved: {log_file}")

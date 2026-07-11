@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.2.6
+v0.2.7
 
 ## Features
 
@@ -68,6 +68,11 @@ v0.2.6
   - MEDIUM
   - LOW
   - Prepare for future notification filtering
+- Important alerts
+  - Extract HIGH priority comments
+  - Display important alerts separately
+  - Save important alerts into log file
+  - Prepare for future Discord notification
 
 ## Environment
 
@@ -144,8 +149,9 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.6
-AI comment importance levels added
+AI Butler v0.2.7
+HIGH priority comments extracted as important alerts
+
 
 ## Future Plans
 
