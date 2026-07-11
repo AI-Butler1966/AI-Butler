@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.4"
+VERSION = "v0.2.5"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -381,6 +381,59 @@ def generate_ai_comment(weather, market):
 
     return comments
 
+def generate_comparison_comments(comparison_lines):
+    comments = []
+
+    if not comparison_lines:
+        return comments
+
+    if any("No previous data" in line for line in comparison_lines):
+        return comments
+
+    if any("BTC/USD" in line and "↑" in line for line in comparison_lines):
+        comments.append("前回と比べてBTC/USDは上昇しています。リスク資産への買いが続いている可能性があります。")
+
+    if any("BTC/USD" in line and "↓" in line for line in comparison_lines):
+        comments.append("前回と比べてBTC/USDは下落しています。暗号資産の値動きに注意しましょう。")
+
+    if any("USD/JPY" in line and "↑" in line for line in comparison_lines):
+        comments.append("前回と比べてUSD/JPYは上昇しています。円安方向の動きに注意です。")
+
+    if any("USD/JPY" in line and "↓" in line for line in comparison_lines):
+        comments.append("前回と比べてUSD/JPYは下落しています。円高方向への変化が出ています。")
+
+    stock_up_count = 0
+    stock_down_count = 0
+
+    stock_labels = ["Nikkei225", "S&P500", "NASDAQ"]
+
+    for label in stock_labels:
+        for line in comparison_lines:
+            if label in line and "↑" in line:
+                stock_up_count += 1
+            if label in line and "↓" in line:
+                stock_down_count += 1
+
+    if stock_up_count >= 2:
+        comments.append("前回と比べて株価指数は全体的に強めです。株式市場の地合いは良さそうです。")
+
+    if stock_down_count >= 2:
+        comments.append("前回と比べて株価指数は全体的に弱めです。株式市場の調整に注意しましょう。")
+
+    if any("Gold" in line and "↑" in line for line in comparison_lines):
+        comments.append("前回と比べてゴールドは上昇しています。安全資産への関心がやや高まっている可能性があります。")
+
+    if any("Crude Oil" in line and "↑" in line for line in comparison_lines):
+        comments.append("前回と比べて原油価格は上昇しています。エネルギー価格の動きに注意しましょう。")
+
+    if any("Temp" in line and "↑" in line for line in comparison_lines):
+        comments.append("前回と比べて気温が上がっています。暑さ対策を意識しましょう。")
+
+    if not comments:
+        comments.append("前回と比べると、主要データは大きく変わっていません。落ち着いた変化です。")
+
+    return comments
+
 
 def print_header(date_text, time_text):
     line = "=" * 50
@@ -474,7 +527,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerは比較表示を見やすく調整しました。")
+    print("AI Butlerは比較結果をAIコメントに反映できるようになりました。")
     print()
 
 
@@ -554,8 +607,11 @@ def main():
 
     weather = get_weather()
     market = get_market_data()
-    comments = generate_ai_comment(weather, market)
     comparison_lines = generate_comparison(weather, market, previous_data)
+
+    comments = generate_ai_comment(weather, market)
+    comparison_comments = generate_comparison_comments(comparison_lines)
+    comments.extend(comparison_comments)
 
     log_file = save_log(
         date_text,

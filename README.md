@@ -56,7 +56,13 @@ v0.2.3
   - Treat very small differences as zero
   - Cleaner arrow display
   - Avoid -0.000 and +0.00 noise
-
+- AI comment based on comparison
+  - Reflect previous comparison in AI comments
+  - Detect BTC/USD changes
+  - Detect USD/JPY changes
+  - Detect stock index changes
+  - Detect commodity changes
+  - Detect temperature changes
 
 
 ## Environment
@@ -134,9 +140,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.4
-Improved comparison display
-
+AI Butler v0.2.5
+AI comment based on comparison added
 
 ## Future Plans
 
