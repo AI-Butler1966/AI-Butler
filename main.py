@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.0"
+VERSION = "v0.2.1"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -164,51 +164,79 @@ def print_market(market):
     print(f"Crude Oil  : {format_value(market['oil'], 2)} USD/bbl")
     print()
 
+
 def generate_ai_comment(weather, market):
     comments = []
 
-    temperature = weather["temperature"]
-    usd_jpy = market["usd_jpy"]
-    btc_usd = market["btc_usd"]
-    gold = market["gold"]
-    oil = market["oil"]
+    temperature = weather.get("temperature")
+    humidity = weather.get("humidity")
+    wind = weather.get("wind")
 
-    if temperature is not None:
-        if temperature >= 30:
-            comments.append("今日はかなり暑いです。水分補給を意識しましょう。")
+    usd_jpy = market.get("usd_jpy")
+    eur_jpy = market.get("eur_jpy")
+    btc_usd = market.get("btc_usd")
+    sp500 = market.get("sp500")
+    nasdaq = market.get("nasdaq")
+    gold = market.get("gold")
+    oil = market.get("oil")
+
+    # Weather analysis
+    if temperature is not None and humidity is not None:
+        if temperature >= 30 and humidity >= 70:
+            comments.append("今日は高温多湿です。熱中症リスクが高めなので、水分補給と休憩を意識しましょう。")
+        elif temperature >= 30:
+            comments.append("今日は気温が高めです。外出時は暑さに注意しましょう。")
         elif temperature >= 25:
-            comments.append("今日は少し暑めです。外出時は体調管理に注意しましょう。")
+            comments.append("今日は少し暑めです。体調管理に気をつけましょう。")
         elif temperature <= 10:
             comments.append("今日は冷え込みます。暖かくして過ごしましょう。")
         else:
-            comments.append("今日の気温は比較的過ごしやすそうです。")
+            comments.append("今日の気温は比較的落ち着いています。")
 
-    if usd_jpy is not None:
-        if usd_jpy >= 160:
+    if wind is not None and wind >= 10:
+        comments.append("風がやや強めです。外出時や自転車・バイク移動では注意しましょう。")
+
+    # Forex analysis
+    if usd_jpy is not None and eur_jpy is not None:
+        if usd_jpy >= 160 and eur_jpy >= 180:
+            comments.append("円はドル・ユーロに対してかなり弱めです。円安トレンドの継続に注意しましょう。")
+        elif usd_jpy >= 160:
             comments.append("USD/JPYはかなり円安水準です。為替の急変に注意しましょう。")
         elif usd_jpy >= 150:
-            comments.append("USD/JPYは円安気味です。輸入価格や海外資産に影響が出やすい水準です。")
+            comments.append("USD/JPYは円安気味です。輸入価格や海外資産への影響に注意です。")
         elif usd_jpy <= 130:
             comments.append("USD/JPYは円高気味です。為替トレンドの変化に注目です。")
 
-    if btc_usd is not None:
-        if btc_usd >= 60000:
+    # Risk asset analysis
+    if btc_usd is not None and nasdaq is not None:
+        if btc_usd >= 60000 and nasdaq >= 25000:
+            comments.append("BTCとNASDAQがともに高めです。リスク資産への買い意欲が強い可能性があります。")
+        elif btc_usd >= 60000:
             comments.append("BTCは高値圏にあります。値動きが大きくなる可能性があります。")
-        elif btc_usd <= 30000:
-            comments.append("BTCは低めの水準です。市場心理が弱い可能性があります。")
 
-    if gold is not None:
-        if gold >= 3000:
+    # Stock and gold analysis
+    if gold is not None and sp500 is not None:
+        if gold >= 3000 and sp500 >= 7000:
+            comments.append("ゴールドと株価指数がともに高水準です。強気相場と安全資産買いが混在している可能性があります。")
+        elif gold >= 3000:
             comments.append("ゴールドは高水準です。安全資産への関心が高まっている可能性があります。")
 
-    if oil is not None:
-        if oil >= 80:
+    # Oil and currency combined analysis
+    if oil is not None and usd_jpy is not None:
+        if oil >= 80 and usd_jpy >= 150:
+            comments.append("原油高と円安が重なると、輸入コストや物価への影響が大きくなりやすいです。")
+        elif oil >= 80:
             comments.append("原油価格は高めです。エネルギー価格やインフレへの影響に注意です。")
         elif oil <= 60:
             comments.append("原油価格は低めです。景気や需要の弱さが意識されている可能性があります。")
 
+    # Overall summary
     if not comments:
         comments.append("大きな警戒サインは少なめです。今日も落ち着いて市場を確認しましょう。")
+    elif len(comments) >= 4:
+        comments.append("総合的には、今日は確認ポイントが多めです。為替・株・商品価格をあわせて見ておきましょう。")
+    else:
+        comments.append("総合的には、いくつか注目点がありますが、落ち着いて状況を確認しましょう。")
 
     return comments
 
@@ -231,7 +259,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerはデータを見てコメントできるようになりました。")
+    print("AI Butlerは複数データを組み合わせてコメントできるようになりました。")
     print()
 
 

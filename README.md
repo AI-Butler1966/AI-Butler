@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.2.0
+v0.2.1
 
 ## Features
 
@@ -39,6 +39,11 @@ v0.2.0
   - Rule-based weather comment
   - Rule-based market comment
   - Risk warning based on current data
+  - Combined analysis using multiple data points
+  - Weather + humidity analysis
+  - Forex combined analysis
+  - Risk asset analysis
+  - Commodity and stock index analysis
 
 
 ## Environment
@@ -116,8 +121,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.0
-Rule-based AI comment added
+AI Butler v0.2.1
+Improved AI comment with combined data analysis
 
 ## Future Plans
 
