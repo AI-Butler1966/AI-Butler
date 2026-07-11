@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.7"
+VERSION = "v0.2.8"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -555,15 +555,16 @@ def get_high_priority_comments(comments):
 
 def print_important_alerts(high_comments):
     sub_line = "-" * 50
+    alert_count = len(high_comments)
 
-    print("🚨 Important Alerts")
+    print(f"🚨 Important Alerts: {alert_count}")
     print(sub_line)
 
-    if not high_comments:
+    if alert_count == 0:
         print("No HIGH priority alerts.")
-
-    for comment in high_comments:
-        print(comment)
+    else:
+        for comment in high_comments:
+            print(comment)
 
     print()
 
@@ -585,7 +586,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI ButlerはHIGHコメントを重要アラートとして抽出できるようになりました。")
+    print("AI ButlerはHIGHアラート数を表示できるようになりました。")
     print()
 
 
@@ -638,9 +639,10 @@ def save_log(date_text, time_text, weather, market, comments, previous_log_summa
         "-" * 50,
         *comparison_lines,
         "",
-        "Important Alerts",
+        f"Important Alerts: {len(high_comments)}",
         "-" * 50,
         *(high_comments if high_comments else ["No HIGH priority alerts."]),
+        "",
         "",
         "AI Comment",
         "-" * 50,

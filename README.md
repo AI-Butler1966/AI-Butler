@@ -73,6 +73,12 @@ v0.2.7
   - Display important alerts separately
   - Save important alerts into log file
   - Prepare for future Discord notification
+- Important alert count
+  - Show number of HIGH priority alerts
+  - Display alert count in terminal
+  - Save alert count into log file
+  - Prepare for future notification control
+
 
 ## Environment
 
@@ -149,8 +155,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.7
-HIGH priority comments extracted as important alerts
+AI Butler v0.2.8
+HIGH priority alert count added
 
 
 ## Future Plans
