@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.1.7
+v0.2.0
 
 ## Features
 
@@ -35,7 +35,10 @@ v0.1.7
 - Log output
   - Save execution result to logs folder
   - Text file output
-
+- AI Comment
+  - Rule-based weather comment
+  - Rule-based market comment
+  - Risk warning based on current data
 
 
 ## Environment
@@ -113,9 +116,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.1.7
-Execution log output added
-
+AI Butler v0.2.0
+Rule-based AI comment added
 
 ## Future Plans
 

@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.1.7"
+VERSION = "v0.2.0"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -164,6 +164,65 @@ def print_market(market):
     print(f"Crude Oil  : {format_value(market['oil'], 2)} USD/bbl")
     print()
 
+def generate_ai_comment(weather, market):
+    comments = []
+
+    temperature = weather["temperature"]
+    usd_jpy = market["usd_jpy"]
+    btc_usd = market["btc_usd"]
+    gold = market["gold"]
+    oil = market["oil"]
+
+    if temperature is not None:
+        if temperature >= 30:
+            comments.append("今日はかなり暑いです。水分補給を意識しましょう。")
+        elif temperature >= 25:
+            comments.append("今日は少し暑めです。外出時は体調管理に注意しましょう。")
+        elif temperature <= 10:
+            comments.append("今日は冷え込みます。暖かくして過ごしましょう。")
+        else:
+            comments.append("今日の気温は比較的過ごしやすそうです。")
+
+    if usd_jpy is not None:
+        if usd_jpy >= 160:
+            comments.append("USD/JPYはかなり円安水準です。為替の急変に注意しましょう。")
+        elif usd_jpy >= 150:
+            comments.append("USD/JPYは円安気味です。輸入価格や海外資産に影響が出やすい水準です。")
+        elif usd_jpy <= 130:
+            comments.append("USD/JPYは円高気味です。為替トレンドの変化に注目です。")
+
+    if btc_usd is not None:
+        if btc_usd >= 60000:
+            comments.append("BTCは高値圏にあります。値動きが大きくなる可能性があります。")
+        elif btc_usd <= 30000:
+            comments.append("BTCは低めの水準です。市場心理が弱い可能性があります。")
+
+    if gold is not None:
+        if gold >= 3000:
+            comments.append("ゴールドは高水準です。安全資産への関心が高まっている可能性があります。")
+
+    if oil is not None:
+        if oil >= 80:
+            comments.append("原油価格は高めです。エネルギー価格やインフレへの影響に注意です。")
+        elif oil <= 60:
+            comments.append("原油価格は低めです。景気や需要の弱さが意識されている可能性があります。")
+
+    if not comments:
+        comments.append("大きな警戒サインは少なめです。今日も落ち着いて市場を確認しましょう。")
+
+    return comments
+
+
+def print_ai_comment(comments):
+    sub_line = "-" * 50
+
+    print("🤖 AI Comment")
+    print(sub_line)
+
+    for comment in comments:
+        print(f"- {comment}")
+
+    print()
 
 
 def print_message():
@@ -172,11 +231,11 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerは実行結果をログ保存できるようになりました。")
+    print("AI Butlerはデータを見てコメントできるようになりました。")
     print()
 
 
-def save_log(date_text, time_text, weather, market):
+def save_log(date_text, time_text, weather, market, comments):
     os.makedirs("logs", exist_ok=True)
 
     file_time = time_text.replace(":", "-")
@@ -217,6 +276,10 @@ def save_log(date_text, time_text, weather, market):
         f"Gold       : {format_value(market['gold'], 2)} USD/oz",
         f"Crude Oil  : {format_value(market['oil'], 2)} USD/bbl",
         "",
+        "AI Comment",
+        "-" * 50,
+        *[f"- {comment}" for comment in comments],
+        "",
         "Message",
         "-" * 50,
         f"Hello, {USER_NAME}!",
@@ -236,12 +299,14 @@ def main():
     date_text, time_text = get_current_time()
     weather = get_weather()
     market = get_market_data()
+    comments = generate_ai_comment(weather, market)
 
-    log_file = save_log(date_text, time_text, weather, market)
+    log_file = save_log(date_text, time_text, weather, market, comments)
 
     print_header(date_text, time_text)
     print_weather(weather)
     print_market(market)
+    print_ai_comment(comments)
     print_message()
     print(f"📝 Log saved: {log_file}")
     print("=" * 50)
