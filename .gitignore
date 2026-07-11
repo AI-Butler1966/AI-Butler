@@ -2,3 +2,4 @@ venv/
 main_backup_*.py
 README_backup_*.md
 logs/
+__pycache__/
