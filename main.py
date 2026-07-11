@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.8"
+VERSION = "v0.2.9"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -568,6 +568,33 @@ def print_important_alerts(high_comments):
 
     print()
 
+def create_notification_message(date_text, time_text, high_comments):
+    lines = [
+        "🚨 AI Butler Alert",
+        f"Version: {VERSION}",
+        f"Date: {date_text}",
+        f"Time: {time_text}",
+        f"HIGH Alerts: {len(high_comments)}",
+        "",
+    ]
+
+    if not high_comments:
+        lines.append("No HIGH priority alerts.")
+    else:
+        for comment in high_comments:
+            lines.append(comment)
+
+    return "\n".join(lines)
+
+
+def print_notification_message(notification_message):
+    sub_line = "-" * 50
+
+    print("📣 Notification Message")
+    print(sub_line)
+    print(notification_message)
+    print()
+
 def print_ai_comment(comments):
     sub_line = "-" * 50
 
@@ -586,11 +613,11 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI ButlerはHIGHアラート数を表示できるようになりました。")
+    print("AI Butlerは通知用メッセージを作れるようになりました。")
     print()
 
 
-def save_log(date_text, time_text, weather, market, comments, previous_log_summary, comparison_lines, high_comments):
+def save_log(date_text, time_text, weather, market, comments, previous_log_summary, comparison_lines, high_comments, notification_message):
     os.makedirs("logs", exist_ok=True)
 
     file_time = time_text.replace(":", "-")
@@ -644,6 +671,10 @@ def save_log(date_text, time_text, weather, market, comments, previous_log_summa
         *(high_comments if high_comments else ["No HIGH priority alerts."]),
         "",
         "",
+        "Notification Message",
+        "-" * 50,
+        *notification_message.splitlines(),
+        "",
         "AI Comment",
         "-" * 50,
         *[f"- {comment}" for comment in comments],
@@ -678,6 +709,7 @@ def main():
     comments.extend(comparison_comments)
     comments = add_importance_to_comments(comments)
     high_comments = get_high_priority_comments(comments)
+    notification_message = create_notification_message(date_text, time_text, high_comments)
 
     log_file = save_log(
         date_text,
@@ -688,6 +720,7 @@ def main():
         previous_log_summary,
         comparison_lines,
         high_comments,
+        notification_message,
     )
 
     print_header(date_text, time_text)
@@ -696,6 +729,7 @@ def main():
     print_market(market)
     print_comparison(comparison_lines)
     print_important_alerts(high_comments)
+    print_notification_message(notification_message)
     print_ai_comment(comments)
     print_message()
     print(f"📝 Log saved: {log_file}")

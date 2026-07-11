@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.2.7
+v0.2.8
 
 ## Features
 
@@ -78,7 +78,11 @@ v0.2.7
   - Display alert count in terminal
   - Save alert count into log file
   - Prepare for future notification control
-
+- Notification message
+  - Create notification message from HIGH alerts
+  - Show notification message in terminal
+  - Save notification message into log file
+  - Prepare for future Discord notification
 
 ## Environment
 
@@ -155,9 +159,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.8
-HIGH priority alert count added
-
+AI Butler v0.2.9
+Notification message created from HIGH alerts
 
 ## Future Plans
 
