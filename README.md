@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.2.3
+v0.2.6
 
 ## Features
 
@@ -63,7 +63,11 @@ v0.2.3
   - Detect stock index changes
   - Detect commodity changes
   - Detect temperature changes
-
+- AI comment importance levels
+  - HIGH
+  - MEDIUM
+  - LOW
+  - Prepare for future notification filtering
 
 ## Environment
 
@@ -140,8 +144,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.5
-AI comment based on comparison added
+AI Butler v0.2.6
+AI comment importance levels added
 
 ## Future Plans
 

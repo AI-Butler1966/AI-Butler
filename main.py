@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.5"
+VERSION = "v0.2.6"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -311,6 +311,41 @@ def generate_comparison(weather, market, previous_data):
 
     return comparison
 
+def add_importance_to_comments(comments):
+    important_comments = []
+
+    high_keywords = [
+        "高温多湿",
+        "熱中症リスク",
+        "かなり弱め",
+        "急変",
+        "原油高",
+        "輸入コスト",
+        "確認ポイントが多め",
+        "下落しています",
+    ]
+
+    medium_keywords = [
+        "高め",
+        "上昇しています",
+        "注意",
+        "リスク資産",
+        "安全資産",
+        "風がやや強め",
+        "変化",
+    ]
+
+    for comment in comments:
+        if any(keyword in comment for keyword in high_keywords):
+            level = "HIGH"
+        elif any(keyword in comment for keyword in medium_keywords):
+            level = "MEDIUM"
+        else:
+            level = "LOW"
+
+        important_comments.append(f"[{level}] {comment}")
+
+    return important_comments
 
 def generate_ai_comment(weather, market):
     comments = []
@@ -527,7 +562,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerは比較結果をAIコメントに反映できるようになりました。")
+    print("AI ButlerはAIコメントに重要度を付けられるようになりました。")
     print()
 
 
@@ -612,6 +647,7 @@ def main():
     comments = generate_ai_comment(weather, market)
     comparison_comments = generate_comparison_comments(comparison_lines)
     comments.extend(comparison_comments)
+    comments = add_importance_to_comments(comments)
 
     log_file = save_log(
         date_text,
