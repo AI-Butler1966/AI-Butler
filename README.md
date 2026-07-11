@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.2.1
+v0.2.2
 
 ## Features
 
@@ -44,6 +44,10 @@ v0.2.1
   - Forex combined analysis
   - Risk asset analysis
   - Commodity and stock index analysis
+- Previous log reader
+  - Find latest log file
+  - Display previous log date and time
+  - Save previous log information into new log
 
 
 ## Environment
@@ -121,8 +125,9 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.1
-Improved AI comment with combined data analysis
+AI Butler v0.2.2
+Previous log reader added
+
 
 ## Future Plans
 
