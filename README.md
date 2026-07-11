@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.2.2
+v0.2.3
 
 ## Features
 
@@ -48,7 +48,10 @@ v0.2.2
   - Find latest log file
   - Display previous log date and time
   - Save previous log information into new log
-
+- Comparison with previous log
+  - Read previous log data
+  - Compare current data with previous data
+  - Show difference with arrows
 
 ## Environment
 
@@ -125,9 +128,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.2
-Previous log reader added
-
+AI Butler v0.2.3
+Comparison with previous log added
 
 ## Future Plans
 

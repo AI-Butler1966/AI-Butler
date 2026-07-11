@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.2"
+VERSION = "v0.2.3"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -112,6 +112,16 @@ def format_value(value, digits=2):
     return f"{value:,.{digits}f}"
 
 
+def format_diff(value, digits=2):
+    if value is None:
+        return "N/A"
+
+    if value > 0:
+        return f"+{value:,.{digits}f}"
+
+    return f"{value:,.{digits}f}"
+
+
 def get_latest_log_file():
     os.makedirs("logs", exist_ok=True)
 
@@ -155,6 +165,145 @@ def read_previous_log_summary(log_file):
 
     except Exception as e:
         return f"Could not read previous log: {e}"
+
+
+def extract_number_from_line(line):
+    try:
+        value_text = line.split(":", 1)[1].strip()
+        value_text = value_text.split()[0]
+        value_text = value_text.replace(",", "")
+
+        if value_text == "N/A":
+            return None
+
+        return float(value_text)
+
+    except Exception:
+        return None
+
+
+def read_previous_log_data(log_file):
+    data = {}
+
+    if log_file is None:
+        return data
+
+    key_map = {
+        "Temp": "temperature",
+        "Humidity": "humidity",
+        "Wind": "wind",
+        "USD/JPY": "usd_jpy",
+        "EUR/USD": "eur_usd",
+        "EUR/JPY": "eur_jpy",
+        "BTC/USD": "btc_usd",
+        "BTC/JPY": "btc_jpy",
+        "Nikkei225": "nikkei",
+        "S&P500": "sp500",
+        "NASDAQ": "nasdaq",
+        "NY Dow": "dow",
+        "Gold": "gold",
+        "Crude Oil": "oil",
+    }
+
+    try:
+        with open(log_file, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+
+        for line in lines:
+            line = line.strip()
+
+            for label, key in key_map.items():
+                if line.startswith(label):
+                    data[key] = extract_number_from_line(line)
+
+        return data
+
+    except Exception:
+        return data
+
+
+def make_comparison_line(label, current_value, previous_value, digits=2, unit=""):
+    if current_value is None or previous_value is None:
+        return f"{label:<10}: N/A"
+
+    diff = current_value - previous_value
+
+    if diff > 0:
+        direction = "↑"
+    elif diff < 0:
+        direction = "↓"
+    else:
+        direction = "→"
+
+    unit_text = f" {unit}" if unit else ""
+    return f"{label:<10}: {direction} {format_diff(diff, digits)}{unit_text}"
+
+
+def generate_comparison(weather, market, previous_data):
+    if not previous_data:
+        return ["No previous data available for comparison."]
+
+    comparison = [
+        make_comparison_line(
+            "Temp",
+            weather.get("temperature"),
+            previous_data.get("temperature"),
+            1,
+            "C",
+        ),
+        make_comparison_line(
+            "USD/JPY",
+            market.get("usd_jpy"),
+            previous_data.get("usd_jpy"),
+            3,
+        ),
+        make_comparison_line(
+            "EUR/JPY",
+            market.get("eur_jpy"),
+            previous_data.get("eur_jpy"),
+            3,
+        ),
+        make_comparison_line(
+            "BTC/USD",
+            market.get("btc_usd"),
+            previous_data.get("btc_usd"),
+            2,
+        ),
+        make_comparison_line(
+            "Nikkei225",
+            market.get("nikkei"),
+            previous_data.get("nikkei"),
+            2,
+        ),
+        make_comparison_line(
+            "S&P500",
+            market.get("sp500"),
+            previous_data.get("sp500"),
+            2,
+        ),
+        make_comparison_line(
+            "NASDAQ",
+            market.get("nasdaq"),
+            previous_data.get("nasdaq"),
+            2,
+        ),
+        make_comparison_line(
+            "Gold",
+            market.get("gold"),
+            previous_data.get("gold"),
+            2,
+            "USD/oz",
+        ),
+        make_comparison_line(
+            "Crude Oil",
+            market.get("oil"),
+            previous_data.get("oil"),
+            2,
+            "USD/bbl",
+        ),
+    ]
+
+    return comparison
 
 
 def generate_ai_comment(weather, market):
@@ -289,6 +438,18 @@ def print_market(market):
     print()
 
 
+def print_comparison(comparison_lines):
+    sub_line = "-" * 50
+
+    print("📊 Comparison with Previous Log")
+    print(sub_line)
+
+    for line in comparison_lines:
+        print(line)
+
+    print()
+
+
 def print_ai_comment(comments):
     sub_line = "-" * 50
 
@@ -307,11 +468,11 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerは前回ログを読めるようになりました。")
+    print("AI Butlerは前回ログと今回データを比較できるようになりました。")
     print()
 
 
-def save_log(date_text, time_text, weather, market, comments, previous_log_summary):
+def save_log(date_text, time_text, weather, market, comments, previous_log_summary, comparison_lines):
     os.makedirs("logs", exist_ok=True)
 
     file_time = time_text.replace(":", "-")
@@ -356,6 +517,10 @@ def save_log(date_text, time_text, weather, market, comments, previous_log_summa
         f"Gold       : {format_value(market['gold'], 2)} USD/oz",
         f"Crude Oil  : {format_value(market['oil'], 2)} USD/bbl",
         "",
+        "Comparison with Previous Log",
+        "-" * 50,
+        *comparison_lines,
+        "",
         "AI Comment",
         "-" * 50,
         *[f"- {comment}" for comment in comments],
@@ -363,7 +528,7 @@ def save_log(date_text, time_text, weather, market, comments, previous_log_summa
         "Message",
         "-" * 50,
         f"Hello, {USER_NAME}!",
-        "AI Butler read the previous log file.",
+        "AI Butler compared the current data with the previous log.",
         "",
         "=" * 50,
     ]
@@ -379,17 +544,28 @@ def main():
 
     previous_log_file = get_latest_log_file()
     previous_log_summary = read_previous_log_summary(previous_log_file)
+    previous_data = read_previous_log_data(previous_log_file)
 
     weather = get_weather()
     market = get_market_data()
     comments = generate_ai_comment(weather, market)
+    comparison_lines = generate_comparison(weather, market, previous_data)
 
-    log_file = save_log(date_text, time_text, weather, market, comments, previous_log_summary)
+    log_file = save_log(
+        date_text,
+        time_text,
+        weather,
+        market,
+        comments,
+        previous_log_summary,
+        comparison_lines,
+    )
 
     print_header(date_text, time_text)
     print_previous_log(previous_log_summary)
     print_weather(weather)
     print_market(market)
+    print_comparison(comparison_lines)
     print_ai_comment(comments)
     print_message()
     print(f"📝 Log saved: {log_file}")
