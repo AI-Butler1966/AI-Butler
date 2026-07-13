@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.3.1"
+VERSION = "v0.3.2"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -582,7 +582,25 @@ def print_important_alerts(high_comments):
 
     print()
 
-def create_notification_message(date_text, time_text, high_comments):
+def create_market_summary(market):
+    lines = [
+        "Market Summary",
+        "━━━━━━━━━━━━━━━━━━━━",
+        f"USD/JPY    : {format_value(market['usd_jpy'], 3)}",
+        f"EUR/JPY    : {format_value(market['eur_jpy'], 3)}",
+        f"BTC/USD    : {format_value(market['btc_usd'], 2)}",
+        f"BTC/JPY    : {format_value(market['btc_jpy'], 0)}",
+        f"Nikkei225  : {format_value(market['nikkei'], 2)}",
+        f"S&P500     : {format_value(market['sp500'], 2)}",
+        f"NASDAQ     : {format_value(market['nasdaq'], 2)}",
+        f"Gold       : {format_value(market['gold'], 2)} USD/oz",
+        f"Crude Oil  : {format_value(market['oil'], 2)} USD/bbl",
+    ]
+
+    return lines
+
+
+def create_notification_message(date_text, time_text, high_comments, market):
     lines = [
         "🚨 AI Butler Alert",
         "",
@@ -592,11 +610,12 @@ def create_notification_message(date_text, time_text, high_comments):
         "",
         f"HIGH Alerts: {len(high_comments)}",
         "",
+        *create_market_summary(market),
+        "",
         "━━━━━━━━━━━━━━━━━━━━",
         "Important Alerts",
         "━━━━━━━━━━━━━━━━━━━━",
     ]
-
     if not high_comments:
         lines.append("No HIGH priority alerts.")
     else:
@@ -667,7 +686,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI ButlerはDiscord通知の送信判定と通知文を改善しました。")
+    print("AI ButlerはDiscord通知にMarket概要を追加しました。")
     print()
 
 
@@ -769,7 +788,7 @@ def main():
     comments.extend(comparison_comments)
     comments = add_importance_to_comments(comments)
     high_comments = get_high_priority_comments(comments)
-    notification_message = create_notification_message(date_text, time_text, high_comments)
+    notification_message = create_notification_message(date_text, time_text, high_comments, market)
     discord_status = send_discord_notification(notification_message, high_comments)
 
     log_file = save_log(

@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.3.1
+v0.3.2
 
 ## Features
 
@@ -93,6 +93,12 @@ v0.3.1
   - Show HIGH alert count in Discord status
   - Format Discord notification message
   - Number important alerts in notification message
+- Market summary in Discord notification
+  - Add USD/JPY to notification
+  - Add EUR/JPY to notification
+  - Add BTC/USD and BTC/JPY to notification
+  - Add stock indices to notification
+  - Add Gold and Crude Oil to notification
 
 ## Environment
 
@@ -169,8 +175,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.3.1
-Improved Discord notification message and send condition
+AI Butler v0.3.2
+Market summary added to Discord notification
 
 ## Future Plans
 
