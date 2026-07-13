@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.3.0"
+VERSION = "v0.3.1"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -585,18 +585,23 @@ def print_important_alerts(high_comments):
 def create_notification_message(date_text, time_text, high_comments):
     lines = [
         "🚨 AI Butler Alert",
+        "",
         f"Version: {VERSION}",
         f"Date: {date_text}",
         f"Time: {time_text}",
+        "",
         f"HIGH Alerts: {len(high_comments)}",
         "",
+        "━━━━━━━━━━━━━━━━━━━━",
+        "Important Alerts",
+        "━━━━━━━━━━━━━━━━━━━━",
     ]
 
     if not high_comments:
         lines.append("No HIGH priority alerts.")
     else:
-        for comment in high_comments:
-            lines.append(comment)
+        for index, comment in enumerate(high_comments, start=1):
+            lines.append(f"{index}. {comment}")
 
     return "\n".join(lines)
 
@@ -610,8 +615,10 @@ def print_notification_message(notification_message):
     print()
 
 def send_discord_notification(notification_message, high_comments):
-    if not high_comments:
-        return "Skipped: No HIGH priority alerts."
+    high_count = len(high_comments)
+
+    if high_count == 0:
+        return "Skipped: No HIGH priority alerts. Discord notification was not sent."
 
     webhook_url = os.environ.get("DISCORD_WEBHOOK_URL")
 
@@ -626,7 +633,7 @@ def send_discord_notification(notification_message, high_comments):
         response = requests.post(webhook_url, json=payload, timeout=10)
 
         if 200 <= response.status_code < 300:
-            return "Sent: Discord notification completed."
+            return f"Sent: Discord notification completed. HIGH Alerts: {high_count}"
 
         return f"Failed: Discord returned HTTP {response.status_code} - {response.text[:300]}"
 
@@ -660,7 +667,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI ButlerはHIGHアラートをDiscordへ通知できるようになりました。")
+    print("AI ButlerはDiscord通知の送信判定と通知文を改善しました。")
     print()
 
 
