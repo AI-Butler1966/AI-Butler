@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.3.2
+v0.4.0
 
 ## Features
 
@@ -99,6 +99,11 @@ v0.3.2
   - Add BTC/USD and BTC/JPY to notification
   - Add stock indices to notification
   - Add Gold and Crude Oil to notification
+- Cron scheduled execution
+  - Run AI Butler automatically every morning at 8:00
+  - Use run_ai_butler.sh
+  - Save cron output to logs/cron.log
+
 
 ## Environment
 
@@ -175,8 +180,9 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.3.2
-Market summary added to Discord notification
+AI Butler v0.4.0
+Cron scheduled execution added
+
 
 ## Future Plans
 
