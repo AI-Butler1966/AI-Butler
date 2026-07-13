@@ -5,13 +5,27 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.2.9"
+VERSION = "v0.3.0"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
 LATITUDE = 33.5902
 LONGITUDE = 130.4017
 
+def load_env_file(file_path=".env"):
+    if not os.path.exists(file_path):
+        return
+
+    with open(file_path, "r", encoding="utf-8") as file:
+        for line in file:
+            line = line.strip()
+
+            if not line or line.startswith("#"):
+                continue
+
+            if "=" in line:
+                key, value = line.split("=", 1)
+                os.environ[key.strip()] = value.strip()
 
 def get_current_time():
     now = datetime.now()
@@ -595,6 +609,39 @@ def print_notification_message(notification_message):
     print(notification_message)
     print()
 
+def send_discord_notification(notification_message, high_comments):
+    if not high_comments:
+        return "Skipped: No HIGH priority alerts."
+
+    webhook_url = os.environ.get("DISCORD_WEBHOOK_URL")
+
+    if not webhook_url:
+        return "Skipped: DISCORD_WEBHOOK_URL is not set."
+
+    try:
+        payload = {
+            "content": notification_message[:1900]
+        }
+
+        response = requests.post(webhook_url, json=payload, timeout=10)
+
+        if 200 <= response.status_code < 300:
+            return "Sent: Discord notification completed."
+
+        return f"Failed: Discord returned HTTP {response.status_code} - {response.text[:300]}"
+
+    except Exception as e:
+        return f"Failed: Discord notification error - {e}"
+
+
+def print_discord_status(discord_status):
+    sub_line = "-" * 50
+
+    print("📡 Discord Notification")
+    print(sub_line)
+    print(discord_status)
+    print()
+
 def print_ai_comment(comments):
     sub_line = "-" * 50
 
@@ -613,11 +660,11 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerは通知用メッセージを作れるようになりました。")
+    print("AI ButlerはHIGHアラートをDiscordへ通知できるようになりました。")
     print()
 
 
-def save_log(date_text, time_text, weather, market, comments, previous_log_summary, comparison_lines, high_comments, notification_message):
+def save_log(date_text, time_text, weather, market, comments, previous_log_summary, comparison_lines, high_comments, notification_message, discord_status):
     os.makedirs("logs", exist_ok=True)
 
     file_time = time_text.replace(":", "-")
@@ -675,6 +722,10 @@ def save_log(date_text, time_text, weather, market, comments, previous_log_summa
         "-" * 50,
         *notification_message.splitlines(),
         "",
+        "Discord Notification",
+        "-" * 50,
+        discord_status,
+        "",
         "AI Comment",
         "-" * 50,
         *[f"- {comment}" for comment in comments],
@@ -694,6 +745,8 @@ def save_log(date_text, time_text, weather, market, comments, previous_log_summa
 
 
 def main():
+    load_env_file()
+   
     date_text, time_text = get_current_time()
 
     previous_log_file = get_latest_log_file()
@@ -710,6 +763,7 @@ def main():
     comments = add_importance_to_comments(comments)
     high_comments = get_high_priority_comments(comments)
     notification_message = create_notification_message(date_text, time_text, high_comments)
+    discord_status = send_discord_notification(notification_message, high_comments)
 
     log_file = save_log(
         date_text,
@@ -721,6 +775,7 @@ def main():
         comparison_lines,
         high_comments,
         notification_message,
+        discord_status,
     )
 
     print_header(date_text, time_text)
@@ -730,6 +785,7 @@ def main():
     print_comparison(comparison_lines)
     print_important_alerts(high_comments)
     print_notification_message(notification_message)
+    print_discord_status(discord_status)    
     print_ai_comment(comments)
     print_message()
     print(f"📝 Log saved: {log_file}")

@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.2.8
+v0.3.0
 
 ## Features
 
@@ -83,6 +83,12 @@ v0.2.8
   - Show notification message in terminal
   - Save notification message into log file
   - Prepare for future Discord notification
+- Discord notification
+  - Send HIGH priority alerts to Discord
+  - Use Discord Webhook
+  - Load secret Webhook URL from .env
+  - Do not commit .env to GitHub
+
 
 ## Environment
 
@@ -159,14 +165,14 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.2.9
-Notification message created from HIGH alerts
+AI Butler v0.3.0
+Discord notification added
+
 
 ## Future Plans
 
 - Add more market data
 - Add AI commentary
-- Add Discord notification
 - Add daily summary
 - Add configuration file
 - Add Docker support
