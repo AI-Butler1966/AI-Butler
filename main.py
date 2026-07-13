@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.3.2"
+VERSION = "v0.4.0"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -686,7 +686,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI ButlerはDiscord通知にMarket概要を追加しました。")
+    print("AI Butlerはcron定期実行に対応しました。")
     print()
 
 
