@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.4.1"
+VERSION = "v0.4.2"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -633,6 +633,50 @@ def print_notification_message(notification_message):
     print(notification_message)
     print()
 
+def create_alert_signature(high_comments):
+    if not high_comments:
+        return ""
+
+    cleaned_comments = []
+
+    for comment in high_comments:
+        cleaned_comments.append(comment.strip())
+
+    return "\n".join(cleaned_comments)
+
+
+def read_last_alert_signature():
+    history_file = "logs/last_high_alerts.txt"
+
+    try:
+        with open(history_file, "r", encoding="utf-8") as file:
+            return file.read().strip()
+    except FileNotFoundError:
+        return ""
+
+
+def save_last_alert_signature(high_comments):
+    history_file = "logs/last_high_alerts.txt"
+
+    try:
+        os.makedirs("logs", exist_ok=True)
+
+        with open(history_file, "w", encoding="utf-8") as file:
+            file.write(create_alert_signature(high_comments))
+    except Exception as error:
+        print(f"Warning: Could not save alert history: {error}")
+
+
+def is_duplicate_alert(high_comments):
+    current_signature = create_alert_signature(high_comments)
+    last_signature = read_last_alert_signature()
+
+    if not current_signature:
+        return False
+
+    return current_signature == last_signature
+
+
 def send_discord_notification(notification_message, high_comments):
     high_count = len(high_comments)
 
@@ -686,7 +730,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerはcronログを見やすく整備しました。")
+    print("AI Butlerは同じHIGHアラートの連続通知を防ぐようになりました。")
     print()
 
 
@@ -789,7 +833,13 @@ def main():
     comments = add_importance_to_comments(comments)
     high_comments = get_high_priority_comments(comments)
     notification_message = create_notification_message(date_text, time_text, high_comments, market)
-    discord_status = send_discord_notification(notification_message, high_comments)
+    if is_duplicate_alert(high_comments):
+        discord_status = "Skipped: Same HIGH alerts as previous notification."
+    else:
+        discord_status = send_discord_notification(notification_message, high_comments)
+
+        if discord_status.startswith("Sent:"):
+            save_last_alert_signature(high_comments)
 
     log_file = save_log(
         date_text,

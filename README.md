@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.4.1
+v0.4.2
 
 ## Features
 
@@ -108,6 +108,11 @@ v0.4.1
   - Record cron end time
   - Show success or failure result
   - Make logs/cron.log easier to check
+- Duplicate HIGH alert prevention
+  - Skip Discord notification when HIGH alerts are the same as the previous notification
+  - Save last HIGH alert signature
+  - Reduce repeated Discord notifications
+
 
 ## Environment
 
@@ -184,8 +189,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.4.1
-Improved cron logging
+AI Butler v0.4.2
+Duplicate HIGH alert prevention
 
 ## Future Plans
 
