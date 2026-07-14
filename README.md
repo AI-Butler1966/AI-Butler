@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.4.0
+v0.4.1
 
 ## Features
 
@@ -103,7 +103,11 @@ v0.4.0
   - Run AI Butler automatically every morning at 8:00
   - Use run_ai_butler.sh
   - Save cron output to logs/cron.log
-
+- Improved cron logging
+  - Record cron start time
+  - Record cron end time
+  - Show success or failure result
+  - Make logs/cron.log easier to check
 
 ## Environment
 
@@ -180,9 +184,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.4.0
-Cron scheduled execution added
-
+AI Butler v0.4.1
+Improved cron logging
 
 ## Future Plans
 

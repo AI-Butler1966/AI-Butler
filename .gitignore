@@ -4,3 +4,4 @@ README_backup_*.md
 logs/
 __pycache__/
 .env
+run_ai_butler_backup_*.sh
