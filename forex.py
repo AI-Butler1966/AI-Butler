@@ -6,7 +6,7 @@ pair=yf.Ticker("JPY=X")
 
 data = pair.history(period="1d")
 
-print(data)
+# print(data)
 
 
 price = data["Close"].iloc[-1]
