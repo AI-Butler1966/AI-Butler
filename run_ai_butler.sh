@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PROJECT_DIR="/home/matuura-toshio/AI-Butler"
+LOG_RETENTION_DAYS=30
 
 echo ""
 echo "=================================================="
@@ -19,6 +20,10 @@ if [ $? -ne 0 ]; then
 fi
 
 mkdir -p logs
+echo "🧹 Cleaning old logs..."
+DELETED_LOGS=$(find "$PROJECT_DIR/logs" -type f -name "20??-??-??_??-??-??.txt" -mtime +"$LOG_RETENTION_DAYS" -print -delete | wc -l)
+echo "🧹 Old Log Cleanup: Deleted $DELETED_LOGS file(s). Retention: ${LOG_RETENTION_DAYS} days"
+echo "--------------------------------------------------"
 
 if [ ! -f "venv/bin/activate" ]; then
     echo "❌ Cron Result: FAILED"

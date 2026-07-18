@@ -6,7 +6,7 @@ It collects weather and market data, then displays a simple dashboard in the ter
 
 ## Version
 
-v0.4.2
+v0.4.4
 
 ## Features
 
@@ -112,7 +112,11 @@ v0.4.2
   - Skip Discord notification when HIGH alerts are the same as the previous notification
   - Save last HIGH alert signature
   - Reduce repeated Discord notifications
-
+- Old log cleanup
+  - Delete normal log files older than 30 days
+  - Keep cron.log
+  - Keep last_high_alerts.txt
+  - Prevent logs directory from growing too much
 
 ## Environment
 
@@ -189,8 +193,8 @@ Development in progress.
 
 Current milestone:
 
-AI Butler v0.4.2
-Duplicate HIGH alert prevention
+AI Butler v0.4.4
+Old log cleanup added
 
 ## Future Plans
 

@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 APP_NAME = "AI Butler"
-VERSION = "v0.4.2"
+VERSION = "v0.4.4"
 USER_NAME = "Toshio"
 
 LOCATION_NAME = "Fukuoka"
@@ -730,7 +730,7 @@ def print_message():
     print("💬 Message")
     print(sub_line)
     print(f"こんにちは、{USER_NAME}さん！")
-    print("AI Butlerは同じHIGHアラートの連続通知を防ぐようになりました。")
+    print("AI Butlerは古いログを自動整理するようになりました。")
     print()
 
 
